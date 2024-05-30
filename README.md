@@ -1,4 +1,4 @@
-# 🏗 ETHBerlin Zupass: SE2 Starter Kit
+# 🏗 ETHPrague Zupass: SE2 Starter Kit
 
 TLDR: 🎥 [watch the intro video here](https://youtu.be/7SGaMHOYc04)
 
@@ -32,8 +32,8 @@ To get started with Scaffold-ETH 2, follow the steps below:
 
 1. Clone the repo
 ```bash
-git clone https://github.com/BuidlGuidl/ethberlin-zupass-starterkit
-cd ethberlin-zupass-starterkit
+git clone https://github.com/BuidlGuidl/ethprague-zupass-starterkit
+cd ethprague-zupass-starterkit
 ```
 
 2. Install dependencies
@@ -86,4 +86,7 @@ https://www.npmjs.com/package/@pcd/zk-eddsa-event-ticket-pcd
 https://www.npmjs.com/package/@pcd/eddsa-ticket-pcd
 https://www.npmjs.com/package/@pcd/semaphore-identity-pcd
 https://www.npmjs.com/package/@pcd/eddsa-ticket-pcd
+
+
+This is forked from EthBerlin Zupass Starterkit: https://github.com/BuidlGuidl/ethberlin-zupass-starterkit
 
