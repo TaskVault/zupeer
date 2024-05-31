@@ -18,8 +18,8 @@ contract YourCollectible is ERC721, Groth16Verifier {
 		107018834531149408458901312749867449513
 	];
 
-	// This is hex to bigint conversion for ETHBerlin signer
-	uint256[2] ETHBERLIN_SIGNER = [
+	// This is hex to bigint conversion for ETHPrague signer
+	uint256[2] ETHPRAGUE_SIGNER = [
 		13908133709081944902758389525983124100292637002438232157513257158004852609027,
 		7654374482676219729919246464135900991450848628968334062174564799457623790084
 	];
@@ -70,7 +70,7 @@ contract YourCollectible is ERC721, Groth16Verifier {
 	modifier validSigner(uint256[38] memory _pubSignals) {
 		uint256[2] memory signer = getSignerFromPublicSignals(_pubSignals);
 		require(
-			signer[0] == ETHBERLIN_SIGNER[0] && signer[1] == ETHBERLIN_SIGNER[1],
+			signer[0] == ETHPRAGUE_SIGNER[0] && signer[1] == ETHPRAGUE_SIGNER[1],
 			"Invalid signer"
 		);
 		_;
