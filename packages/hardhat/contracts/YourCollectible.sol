@@ -13,9 +13,9 @@ contract YourCollectible is ERC721, Groth16Verifier {
 	// Predefined constants |
 	// ----------------------
 
-	// This us the ETHBerlin event UUID converted to bigint
+	// This us the ETHPrague event UUID converted to bigint
 	uint256[1] VALID_EVENT_IDS = [
-		111560146890584288369567824893314450802
+		107018834531149408458901312749867449513
 	];
 
 	// This is hex to bigint conversion for ETHBerlin signer
