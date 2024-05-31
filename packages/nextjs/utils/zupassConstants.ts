@@ -1,6 +1,6 @@
 import { PipelineEdDSATicketZuAuthConfig } from "@pcd/passport-interface";
 
-export const ETHBERLIN_ZUAUTH_CONFIG: PipelineEdDSATicketZuAuthConfig[] = [
+export const ETHPRAGUE_ZUAUTH_CONFIG: PipelineEdDSATicketZuAuthConfig[] = [
   {
     pcdType: "eddsa-ticket-pcd",
     publicKey: [

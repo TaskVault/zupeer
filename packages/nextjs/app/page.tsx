@@ -8,8 +8,8 @@ import { hexToBigInt } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-import { generateWitness, isETHBerlinPublicKey } from "~~/utils/scaffold-eth/pcd";
-import { ETHBERLIN_ZUAUTH_CONFIG } from "~~/utils/zupassConstants";
+import { generateWitness, isETHPraguePublicKey } from "~~/utils/scaffold-eth/pcd";
+import { ETHPRAGUE_ZUAUTH_CONFIG } from "~~/utils/zupassConstants";
 
 // Get a valid event id from { supportedEvents } from "zuauth" or https://api.zupass.org/issue/known-ticket-types
 const fieldsToReveal = {
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
       notification.error("Please connect wallet");
       return;
     }
-    const result = await zuAuthPopup({ fieldsToReveal, watermark: connectedAddress, config: ETHBERLIN_ZUAUTH_CONFIG });
+    const result = await zuAuthPopup({ fieldsToReveal, watermark: connectedAddress, config: ETHPRAGUE_ZUAUTH_CONFIG });
     if (result.type === "pcd") {
       setPcd(JSON.parse(result.pcdStr).pcd);
     } else {
@@ -55,8 +55,8 @@ const Home: NextPage = () => {
       return;
     }
 
-    if (!isETHBerlinPublicKey(deserializedPCD.claim.signer)) {
-      notification.error(`[ERROR Frontend] PCD is not signed by ETHBerlin`);
+    if (!isETHPraguePublicKey(deserializedPCD.claim.signer)) {
+      notification.error(`[ERROR Frontend] PCD is not signed by ETHPrague`);
       return;
     }
 
@@ -125,7 +125,7 @@ const Home: NextPage = () => {
               <a className="link" href="https://github.com/proofcarryingdata/zupass" target="_blank">
                 Zupass
               </a>{" "}
-              to verify PCDs (Proof-Carrying Data). <span className="font-bold">e.g.</span> ETHBerlin tickets.
+              to verify PCDs (Proof-Carrying Data). <span className="font-bold">e.g.</span> ETHPrague tickets.
             </p>
             <p className="text-sm m-0">
               - Check
