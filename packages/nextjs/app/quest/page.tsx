@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { toString, useCallback, useState } from "react";
 import { ZKEdDSAEventTicketPCDPackage } from "@pcd/zk-eddsa-event-ticket-pcd";
 import { zuAuthPopup } from "@pcd/zuauth";
 import type { NextPage } from "next";
-import { useReward } from "react-rewards";
 import { hexToBigInt } from "viem";
+import { getProof } from "viem/actions";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
@@ -31,17 +31,23 @@ const Home: NextPage = () => {
   const [team, setTeam] = useState("");
 
   const [matrixRoom, setMatrixRoom] = useState("");
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
-  const { reward, isAnimating } = useReward("up", "confetti");
 
   const [quests, setQuests] = useState([
+    {
+      id: 1,
+      title: "Help me with Zupass SDK",
+      description: "I need help with Zupass SDK, this is my tg handle @xabdomo",
+      team: "Zupass Team",
+      matrixRoom: "!vtJeAciiZJdHfPAGYL:matrix.org",
+      status: "open",
+    },
     {
       id: 2,
       title: "Help me with Zupass SDK",
       description: "I need help with Zupass SDK, this is my tg handle @xabdomo",
       team: "Zupass Team",
       matrixRoom: "!vtJeAciiZJdHfPAGYL:matrix.org",
-      status: "in-progress",
+      status: "open",
     },
   ]);
 
@@ -54,7 +60,7 @@ const Home: NextPage = () => {
       description: description,
       team: team,
       matrixRoom: matrixRoom,
-      status: "open", // "open" | "closed" | "in-progress"
+      status: "open",
     };
 
     setTitle("");
@@ -65,11 +71,11 @@ const Home: NextPage = () => {
     setQuests(prevQuests => [...prevQuests, newQuest]);
   }, [quests, title, description, team, matrixRoom]);
 
-  // const joinRoom = (mr: any) => {
-  //   // join the chat room
-  //   notification.info(`https://matrix.to/#/${mr}`);
-  //   window.open(`https://matrix.to/#/${mr}`);
-  // };
+  const joinRoom = (mr: any) => {
+    // join the chat room
+    notification.info(`https://matrix.to/#/${mr}`);
+    window.open(`https://matrix.to/#/${mr}`);
+  };
 
   const getProof = useCallback(async () => {
     if (!connectedAddress) {
@@ -164,59 +170,6 @@ const Home: NextPage = () => {
   return (
     <>
       <div className="flex flex-col items-center mt-24">
-        {/* proov you are hacker with zupass */}
-        <h2 className="text-2xl font-bold">Zupass Proof</h2>
-        <div className="card w-96 bg-base-100 shadow-xl">
-          <div className="card-body">
-            <p>Verify your hacker credentials to add Quests.</p>
-            <button className="btn btn-secondary w-full tooltip" onClick={getProof} disabled={!!pcd}>
-              {!pcd ? "Get Proof" : "Proof Received!"}
-            </button>
-          </div>
-        </div>
-        {/* Post Quest form */}
-
-        <h2 className="text-2xl font-bold mt-10">Ask for Help</h2>
-        <div className="card w-96 bg-base-100 shadow-xl">
-          <div className="card-body">
-            <p>Post a quest for help</p>
-            <div className="flex flex-col gap-2">
-              <input
-                type="text"
-                placeholder="Question / Problem"
-                className="input input-primary"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-              />
-              <textarea
-                placeholder="Description"
-                className="textarea textarea-primary"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              ></textarea>
-              <input
-                type="text"
-                placeholder="Team / Project"
-                className="input input-primary"
-                value={team}
-                onChange={e => setTeam(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Matrix Room"
-                className="input input-primary"
-                value={matrixRoom}
-                onChange={e => setMatrixRoom(e.target.value)}
-              />
-              <button className="btn btn-primary" onClick={postQuest} disabled={!pcd}>
-                Post a Quest
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="divider"></div>
-
         {/* show Quests available */}
 
         <div className="mt-10">
@@ -225,25 +178,13 @@ const Home: NextPage = () => {
             {quests.map(quest => (
               <div key={quest.id} className="card bg-base-100 shadow-xl">
                 <div className="card-body">
-                  <div className="flex justify-between">
-                    <h2 className="card-title">{quest.title}</h2>
-                  </div>
-
+                  <h2 className="card-title">{quest.title}</h2>
                   <p>{quest.description}</p>
                   <p>
                     <b>Team / Project:</b> {quest.team}
                   </p>
-                  <p>
-                    <b>Status:</b> {quest.status}
-                  </p>
-                  {/* <button className="btn btn-primary" onClick={() => joinRoom(quest.matrixRoom)}>
+                  <button className="btn btn-primary" onClick={() => joinRoom(quest.matrixRoom)}>
                     Chat with the Hacker
-                  </button> */}
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => document.getElementById("close_quest_modal").showModal()}
-                  >
-                    Close the Quest
                   </button>
                 </div>
               </div>
@@ -340,24 +281,45 @@ const Home: NextPage = () => {
       </div>
       <dialog id="close_quest_modal" className="modal">
         <div className="modal-box">
-          <h2 className="font-bold text-lg ">Did it helps?</h2>
+          <h3 className="font-bold text-lg">Evalute the mentoring session</h3>
           <div className="modal-action">
-            {/* if there is a button in form, it will close the modal */}
-            <button id="up" className="btn btn-circle text-lg" disabled={isAnimating} onClick={reward}>
-              👍
-            </button>
-            <button className="btn btn-circle ml-5 text-lg" onClick={() => setShowFeedbackForm(true)}>
-              👎
-            </button>
-          </div>
-          <div hidden={!showFeedbackForm}>
-            <h3>How could this have been better?</h3>
-            <textarea
-              placeholder="Description"
-              className="textarea textarea-primary"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-            ></textarea>
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                Button
+              </button>
+              <button className="btn ml-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                Button
+              </button>
+            </form>
           </div>
         </div>
       </dialog>
